@@ -1,2 +1,2 @@
 ﻿# PowerShell-Tutorial
- # YouTube Playlist : 
+ # YouTube Playlist : https://www.youtube.com/playlist?list=PLrxrsr1kiqJbF6abQOstaXN7xvttjjULG
