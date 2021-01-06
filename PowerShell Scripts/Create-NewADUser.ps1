@@ -1,46 +1,51 @@
- 
-$path = ''
-$users = import-csv $path
+ #Import the Active Directory Module
+ Import-Module activedirectory 
 
-#Standard values
-$Company       = 'SWE'
-$OU= ' '
-$DC= ' ' 
+ #Import the list from the user
+ $Users = Import-Csv -Path C:\Userlist.csv   
 
-ForEach ($user in $users) {
+ $OU= ''
 
-$SecuredPassword = 'xxiff44#'
-$DisplayName = $user.DisplayName 
-$GivenName = $user.GivenName 
-$samaccountname = $user.samAccountName 
-$LastName = $user.LastName 
-$Name = $user.Name 
+ foreach ($User in $Users)            
+ {   
 
-$AllObjects=@()
+  $Office         
+  $Displayname =  $User.Lastname + ", " +  $User.Firstname            
+  $UserFirstname = $User.Firstname
+  $UserLastname = $User.Lastname            
+  $SAM = $user.samAccountName       
+  $UPN = $UserFirstname + $UserLastname + "@swe.local"           
+  $Description = $User.Description            
+  $Password = $User.Password
+  
+  try {
+  Write-Host Creating User: $Displayname
+  #Creation of the account with the requested formatting.
+  New-ADUser -Name "$Displayname" `
+       -DisplayName "$Displayname" `
+       -SamAccountName $SAM `
+       -Office "Office" `
+       -UserPrincipalName $UPN ` 
+       -GivenName "$UserFirstname" `
+       -Surname "$UserLastname" ` 
+       -Description "$Description" `
+       -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) ` 
+       -Enabled $true `
+	   -Path "$OU" `
+       -ChangePasswordAtLogon $True `
+       –PasswordNeverExpires $false
+       
+  $property = @{samAccount=$user.samAccountName;Message='CreatedSuccessfully'} 
+  
+  catch{
+  $errormessage = $_.exception.message
+  $property = @{samAccount=$user.samAccountName;Message=$errormessage} 
+ }
+  $AllObjects += New-Object PSobject -Property $property  
+ }
 
-#create the user
-try{
-New-ADUser  -AccountPassword:$SecurePassword `
-			-ChangePasswordAtLogon:$false `
-			-Company:$Company `
-			-DisplayName:$DisplayName `        
-			-Enabled:$true `
-			-GivenName:$GivenName `
-			-Name:$Name `
-			-Path:$OU `
-			-SamAccountName:$samaccountname `
-			-Server:$DC `
-			-Surname:$LastName `
-			-EA Stop
-			
-$property = @{samAccount=$user.samAccountName;Message='CreatedSuccessfully'}		
-}
-catch{
-$errormessage = $_.exception.message
-$property = @{samAccount=$user.samAccountName;Message=$errormessage}	
-}
-$AllObjects += New-Object PSobject -Property $property		
-}
+  $AllObjects | export-csv c:\Output.csv -NoTypeInformation 
+ }
 
-$AllObjects | export-csv c:\Output.csv -NoTypeInformation
-
+      
+ }
