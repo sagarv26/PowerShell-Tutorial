@@ -13,10 +13,10 @@ Get-Module -ListAvailable
 Get-Module
 
 #Use the Get-Command cmdlet to find all available commands
-Get-Command -Module module-name
+Get-Command -Module SimplySql
 
 #Import a Module
-Import-Module module-name
+Import-Module SimplySql
 
 #To add the TestCmdlets module in the C:\ps-test directory to your session
 Import-Module C:\ps-test\TestCmdlets

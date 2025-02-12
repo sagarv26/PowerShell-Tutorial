@@ -3,8 +3,9 @@
  Import-Module activedirectory 
  
  #Get Content from CSV
- $groups=Import-Csv 'C:\Input.csv' 
-
+ $groups=Import-Csv 'C:\Input.csv'
+ #name,members - "groupName,user1|user2|user3" 
+ 
  $Object=@()
  foreach($group in $groups){
 
@@ -13,7 +14,7 @@
   #Creating Group
   New-ADGroup $group.name -Path "ou=TestOU,DC=test,DC=com" -GroupScope Global -GroupCategory Security
 
-  $users = ($group.members).split(",")
+  $users = ($group.members).split("|")
   foreach($user in $users){
 	  #AddingMember
 	  Add-ADGroupMember $group.name -Members $user

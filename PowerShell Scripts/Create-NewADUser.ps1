@@ -33,11 +33,11 @@
        -Enabled $true `
 	   -Path "$OU" `
        -ChangePasswordAtLogon $True `
-       –PasswordNeverExpires $false
+       -PasswordNeverExpires $false
        
   $property = @{samAccount=$user.samAccountName;Message='CreatedSuccessfully'} 
   
-  catch{
+ } catch{
   $errormessage = $_.exception.message
   $property = @{samAccount=$user.samAccountName;Message=$errormessage} 
  }

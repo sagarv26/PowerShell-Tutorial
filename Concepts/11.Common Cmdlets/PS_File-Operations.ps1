@@ -12,8 +12,8 @@ Copy-Item -Path $folder1 -Destination $destinationfolder
 
  
 #Read and Rename File
-Get-Content "E:\PS_Output\git.txt"
-Rename-Item "E:\PS_Output\git.txt" git-commands.txt
+Get-Content "E:\PS_Output\git-commands.txt"
+Rename-Item "E:\PS_Output\git-commands.txt" git.txt
 
 $Dir = get-childitem C:\windows\system32 
 $List = $Dir | where {$_.extension -eq ".dll"}
